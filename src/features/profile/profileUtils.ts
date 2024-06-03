@@ -22,6 +22,19 @@ type ProfileState = {
   mode: "view" | "edit" | "add";
 };
 
+const defaultProfile = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  state: "",
+  zip: "",
+  photo: "",
+  notes: "",
+};
+
 const makeFakeUserList = (): Profile[] => {
   return fakeUsers.map((user) => {
     const names = user.name.split(" ");
@@ -44,4 +57,10 @@ const makeFakeUserList = (): Profile[] => {
   });
 };
 
-export { makeFakeUserList, type Profile, type ProfileState, type NewProfile };
+export {
+  defaultProfile,
+  makeFakeUserList,
+  type Profile,
+  type ProfileState,
+  type NewProfile,
+};

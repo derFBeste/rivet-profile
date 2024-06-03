@@ -52,8 +52,8 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## TODO
 
 
-- [ ] Allow all employee profiles to be viewed on a single screen
-- [ ] Allow a single employee profile to be viewed
+- [x] Allow all employee profiles to be viewed on a single screen
+- [x] Allow a single employee profile to be viewed
 - [ ] Allow a new employee profile to be created
 - [ ] Allow an existing employee profile to be updated
 

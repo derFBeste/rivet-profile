@@ -29,8 +29,11 @@ export const profileSlice = createSlice({
   reducers: {
     setActiveProfile: (state, action) => {
       const id = action.payload;
-      const found = state.profiles.find((item) => item.id === id);
-      state.inFocus = found || null;
+      if (id !== state.inFocus?.id) {
+        const found = state.profiles.find((item) => item.id === id);
+        state.inFocus = found || null;
+      }
+
       // state.settings.customTopics.topicsSortType.name = action.payload.name;
     },
     setMode: (state, action) => {
@@ -58,7 +61,7 @@ export const { setActiveProfile, setMode } = profileSlice.actions;
 export const profileList = (state: RootState) => state.profile.profiles;
 export const countProfiles = (state: RootState) =>
   state.profile.profiles.length as number;
-export const currentProfile = (state: RootState) => state.profile.inFocus;
-export const readOnly = (state: RootState) => state.profile.mode === "view";
+export const profileSelector = (state: RootState) => state.profile.inFocus;
+export const modeSelector = (state: RootState) => state.profile.mode;
 
 export default profileSlice.reducer;

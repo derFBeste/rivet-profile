@@ -1,70 +1,84 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  currentProfile,
-  readOnly,
-  setActiveProfile,
-  setMode,
-} from "./profileSlice";
-import {
+  Button,
   Drawer,
   OutlinedTextFieldProps,
   Stack,
   TextField,
 } from "@mui/material";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  profileSelector,
+  modeSelector,
+  setActiveProfile,
+  setMode,
+} from "./profileSlice";
 import { ProfileLineItem } from "./ProfileLineItem";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { defaultProfile } from "./profileUtils";
+
+// TODO: add validation
+// TODO: add edit toggle
+
+const profileSchema = z.object({
+  first_name: z.string().min(1, { message: "Required" }).max(255),
+  last_name: z.string().min(1, { message: "Required" }).max(255),
+  email: z.string().email().max(255),
+  phone: z.string().min(1, { message: "Required" }).max(255),
+  address: z.string().min(1, { message: "Required" }).max(255),
+  city: z.string().min(1, { message: "Required" }).max(255),
+  state: z.string().min(1, { message: "Required" }).max(255),
+  zip: z.string().min(1, { message: "Required" }).max(255),
+  photo: z.string().max(255).optional(),
+  notes: z.string().optional(),
+});
+
+type ProfileSchema = z.infer<typeof profileSchema>;
 
 function ProfileDrawer() {
   const dispatch = useDispatch();
-  const isReadOnly = useSelector(readOnly);
-  const profile = useSelector(currentProfile);
+  const mode = useSelector(modeSelector);
+  const readOnly = mode === "view";
+  const profile = useSelector(profileSelector);
 
-  const [transientProfile, setTransientProfile] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-    // photo: "",
-    // notes: "",
+  const { handleSubmit, reset, control } = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema),
+    values: mode === "add" || profile === null ? defaultProfile : profile,
   });
 
-  // TODO: use FormControl
-  // TODO: submit button, warning if unsaved changes
-
-  function handleClose() {
+  function onClose() {
     dispatch(setActiveProfile(null));
     dispatch(setMode("view"));
+    // reset(defaultProfile);
+  }
+
+  function onSubmit(data: ProfileSchema) {
+    console.log("submitting", data);
+    // dispatch(setActiveProfile(data));
+    // dispatch(setMode("view"));
   }
 
   return (
-    <Drawer
-      anchor="right"
-      open={!!profile || !isReadOnly}
-      onClose={handleClose}
-    >
-      <ProfileLineItem profile={profile || transientProfile} />
-
+    <Drawer anchor="right" open={!!profile || mode === "add"} onClose={onClose}>
+      <ProfileLineItem profile={profile || defaultProfile} />
       <Stack direction="column" spacing={2} margin="1rem">
         <Stack direction="row" spacing={1}>
           <TextInput
-            id="first-name"
+            id="first_name"
             label="First Name"
             variant="outlined"
-            value={profile?.first_name}
-            readOnly={isReadOnly}
+            readOnly={readOnly}
+            control={control}
             required
             fullWidth
           />
           <TextInput
-            id="last-name"
+            id="last_name"
             label="Last Name"
             variant="outlined"
-            value={profile?.last_name}
-            readOnly={isReadOnly}
+            readOnly={readOnly}
+            control={control}
             required
             fullWidth
           />
@@ -74,8 +88,8 @@ function ProfileDrawer() {
             id="email"
             label="Email"
             variant="outlined"
-            value={profile?.email}
-            readOnly={isReadOnly}
+            readOnly={readOnly}
+            control={control}
             required
             fullWidth
           />
@@ -83,8 +97,8 @@ function ProfileDrawer() {
             id="phone"
             label="Phone"
             variant="outlined"
-            value={profile?.phone}
-            readOnly={isReadOnly}
+            readOnly={readOnly}
+            control={control}
             required
             fullWidth
           />
@@ -93,53 +107,59 @@ function ProfileDrawer() {
           id="address"
           label="Address"
           variant="outlined"
-          value={profile?.address}
+          control={control}
           required
-          readOnly={isReadOnly}
+          readOnly={readOnly}
         />
         <Stack direction="row" spacing={1}>
           <TextInput
             id="city"
             label="City"
             variant="outlined"
-            value={profile?.city}
+            control={control}
             required
-            readOnly={isReadOnly}
+            readOnly={readOnly}
           />
           <TextInput
             id="state"
             label="State"
             variant="outlined"
-            value={profile?.state}
+            control={control}
             required
-            readOnly={isReadOnly}
+            readOnly={readOnly}
           />
           <TextInput
             id="zip"
             label="Zip"
             variant="outlined"
-            value={profile?.zip}
+            control={control}
             required
-            readOnly={isReadOnly}
+            readOnly={readOnly}
           />
         </Stack>
         <TextInput
           id="photo"
-          label="Photo"
+          label="Photo URL"
           variant="outlined"
-          readOnly={isReadOnly}
-          value={profile?.photo}
+          control={control}
+          readOnly={readOnly}
         />
         <TextInput
           id="notes"
           label="Notes"
           variant="outlined"
-          value={profile?.notes}
-          readOnly={isReadOnly}
+          control={control}
+          readOnly={readOnly}
           minRows={3}
           multiline
         />
       </Stack>
+      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
+        Submit
+      </Button>
+      <Button onClick={() => reset(defaultProfile)} variant={"outlined"}>
+        Reset
+      </Button>
     </Drawer>
   );
 }
@@ -147,17 +167,31 @@ function ProfileDrawer() {
 export default ProfileDrawer;
 
 interface TextInputProps extends OutlinedTextFieldProps {
+  id: string;
   readOnly: boolean;
+  control: any;
 }
 
+// wraps TextField in a Controller for use with react-hook-form
 function TextInput(props: TextInputProps) {
   return (
-    <TextField
-      {...props}
-      inputProps={{
-        readOnly: props.readOnly,
-      }}
-      sx={{ pointerEvents: props.readOnly ? "none" : "initial" }}
+    <Controller
+      control={props.control}
+      name={props.id}
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <TextField
+          // {...field}
+          {...props}
+          value={value}
+          onChange={onChange}
+          helperText={error ? error.message : null}
+          error={!!error}
+          inputProps={{
+            readOnly: props.readOnly,
+          }}
+          sx={{ pointerEvents: props.readOnly ? "none" : "initial" }}
+        />
+      )}
     />
   );
 }

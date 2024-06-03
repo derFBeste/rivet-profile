@@ -2,11 +2,12 @@ import { ProfileList } from "./features/profile/ProfileList";
 import { Box, Button, Stack } from "@mui/material";
 import ProfileDrawer from "./features/profile/ProfileDrawer";
 import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
-import { useDispatch } from "react-redux";
-import { setMode } from "./features/profile/profileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { profileSelector, setMode } from "./features/profile/profileSlice";
 
 function App() {
   const dispatch = useDispatch();
+  const profile = useSelector(profileSelector);
 
   function handleClickAdd() {
     alert("Should add another profile!");
