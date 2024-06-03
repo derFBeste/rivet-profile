@@ -7,12 +7,8 @@ const ProfileList = () => {
   const profiles = useSelector(profileList);
   const dispatch = useDispatch();
 
-  // function trySetProfile(data: number) {
-  //   dispatch(setActiveProfile(data));
-  // }
-
   return (
-    <Stack spacing={1} sx={{ textAlign: "left" }}>
+    <Stack spacing={1} textAlign="left">
       {profiles.length > 0 &&
         profiles.map((profile) => (
           <Box
@@ -26,7 +22,7 @@ const ProfileList = () => {
             key={profile.id}
             onClick={() => dispatch(setActiveProfile(profile.id))}
           >
-            <ProfileLineItem profile={profile} />
+            <ProfileLineItem profile={profile} canEdit />
           </Box>
         ))}
     </Stack>

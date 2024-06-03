@@ -14,9 +14,12 @@ type Profile = {
   notes?: string; // 4GB max"
 };
 
+type NewProfile = Omit<Profile, "id">;
+
 type ProfileState = {
   profiles: Profile[];
   inFocus: Profile | null;
+  mode: "view" | "edit" | "add";
 };
 
 const makeFakeUserList = (): Profile[] => {
@@ -41,4 +44,4 @@ const makeFakeUserList = (): Profile[] => {
   });
 };
 
-export { makeFakeUserList, type Profile, type ProfileState };
+export { makeFakeUserList, type Profile, type ProfileState, type NewProfile };

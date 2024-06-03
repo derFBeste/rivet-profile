@@ -6,6 +6,7 @@ import { fetchProfile, fetchProfiles } from "../../api";
 const initialState = {
   profiles: [],
   inFocus: null,
+  mode: "view",
 } as ProfileState;
 
 function returnFakeProfiles() {
@@ -32,6 +33,9 @@ export const profileSlice = createSlice({
       state.inFocus = found || null;
       // state.settings.customTopics.topicsSortType.name = action.payload.name;
     },
+    setMode: (state, action) => {
+      state.mode = action.payload;
+    },
   },
   extraReducers(builder) {
     // builder.addCase(fetchUser.fulfilled, (state, action) => {
@@ -50,10 +54,11 @@ export const profileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setActiveProfile } = profileSlice.actions;
+export const { setActiveProfile, setMode } = profileSlice.actions;
 export const profileList = (state: RootState) => state.profile.profiles;
 export const countProfiles = (state: RootState) =>
   state.profile.profiles.length as number;
 export const currentProfile = (state: RootState) => state.profile.inFocus;
+export const readOnly = (state: RootState) => state.profile.mode === "view";
 
 export default profileSlice.reducer;

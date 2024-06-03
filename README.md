@@ -52,11 +52,15 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## TODO
 
 
-- [] Allow all employee profiles to be viewed on a single screen
-- [] Allow a single employee profile to be viewed
-- [] Allow a new employee profile to be created
-- [] Allow an existing employee profile to be updated
+- [ ] Allow all employee profiles to be viewed on a single screen
+- [ ] Allow a single employee profile to be viewed
+- [ ] Allow a new employee profile to be created
+- [ ] Allow an existing employee profile to be updated
 
+- [ ] best way to access state in redux
+- [ ] type the actions
+- [ ] use system props for padding, margin, etc.
+- [ ] make profile pictures round, add initials if no picture
 - [ ] button for adding new employee
 - [ ] use stack
 - [ ] add alerts
@@ -66,3 +70,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [ ] extract class objects
 - [ ] look at zod for validation
 - [ ] remove lodash
+- [ ] does dispatch have any implications for rerendering?
