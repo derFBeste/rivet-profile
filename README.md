@@ -1,6 +1,5 @@
 
 
-<!-- aae52618a7411c8fcc5485cd8d7b2a4408303167f8ede9099f03605f6eac2b36 -->
 
 # Getting Started with Create React App
 
@@ -52,5 +51,18 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## TODO
 
+
+- [] Allow all employee profiles to be viewed on a single screen
+- [] Allow a single employee profile to be viewed
+- [] Allow a new employee profile to be created
+- [] Allow an existing employee profile to be updated
+
+- [ ] button for adding new employee
+- [ ] use stack
+- [ ] add alerts
+- [ ] try with slow response
+- [ ] dark mode
+- [ ] validation for response, react form?
 - [ ] extract class objects
 - [ ] look at zod for validation
+- [ ] remove lodash
