@@ -71,3 +71,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [ ] look at zod for validation
 - [ ] remove lodash
 - [ ] does dispatch have any implications for rerendering?
+
+
+## notes
+
+- consolidated on profile instead of user
+- used built in props for padding, margin, gap, etc.

@@ -2,9 +2,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Drawer,
+  FormControlLabel,
   OutlinedTextFieldProps,
   Stack,
+  Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,13 +17,18 @@ import {
   modeSelector,
   setActiveProfile,
   setMode,
+  updateProfile,
+  addProfile,
 } from "./profileSlice";
 import { ProfileLineItem } from "./ProfileLineItem";
 import { Controller, useForm } from "react-hook-form";
-import { defaultProfile } from "./profileUtils";
+import { NewProfile, Profile, defaultProfile } from "./profileUtils";
+import store from "../../store";
+import { ChangeEvent } from "react";
 
-// TODO: add validation
 // TODO: add edit toggle
+// TODO: validate onupdate/focus off
+// TODO: try card
 
 const profileSchema = z.object({
   first_name: z.string().min(1, { message: "Required" }).max(255),
@@ -34,6 +43,7 @@ const profileSchema = z.object({
   notes: z.string().optional(),
 });
 
+// This type ends up being the same as Profile.
 type ProfileSchema = z.infer<typeof profileSchema>;
 
 function ProfileDrawer() {
@@ -50,20 +60,44 @@ function ProfileDrawer() {
   function onClose() {
     dispatch(setActiveProfile(null));
     dispatch(setMode("view"));
-    // reset(defaultProfile);
+    reset(defaultProfile);
   }
 
   function onSubmit(data: ProfileSchema) {
     console.log("submitting", data);
+    if (mode === "add") {
+      store.dispatch(addProfile(data));
+    } else {
+      profile && store.dispatch(updateProfile({ ...data, id: profile.id }));
+    }
+
+    // TODO: on success: update the profile list, show toast
+
+    // store.dispatch(addProfile(data));
+    // store.dispatch(updateProfile(data));
     // dispatch(setActiveProfile(data));
     // dispatch(setMode("view"));
   }
 
+  function onToggleEdit(_: ChangeEvent<HTMLInputElement>, checked: boolean) {
+    dispatch(setMode(checked ? "edit" : "view"));
+  }
+
   return (
     <Drawer anchor="right" open={!!profile || mode === "add"} onClose={onClose}>
-      <ProfileLineItem profile={profile || defaultProfile} />
-      <Stack direction="column" spacing={2} margin="1rem">
-        <Stack direction="row" spacing={1}>
+      <Stack direction="row" justifyContent="space-between">
+        <ProfileLineItem profile={profile || defaultProfile} />
+        {mode !== "add" && (
+          <FormControlLabel
+            control={
+              <Switch checked={mode === "edit"} onChange={onToggleEdit} />
+            }
+            label="Edit"
+          />
+        )}
+      </Stack>
+      <Stack direction="column" gap={2} margin="1rem">
+        <Stack direction="row" gap={1}>
           <TextInput
             id="first_name"
             label="First Name"
@@ -83,7 +117,7 @@ function ProfileDrawer() {
             fullWidth
           />
         </Stack>
-        <Stack direction="row" useFlexGap spacing={1}>
+        <Stack direction="row" useFlexGap gap={1}>
           <TextInput
             id="email"
             label="Email"
@@ -111,7 +145,7 @@ function ProfileDrawer() {
           required
           readOnly={readOnly}
         />
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" gap={1}>
           <TextInput
             id="city"
             label="City"
@@ -153,13 +187,17 @@ function ProfileDrawer() {
           minRows={3}
           multiline
         />
+        <Stack direction="row" gap={1} justifyContent="end">
+          {mode !== "view" && (
+            <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
+              {mode === "add" ? "Add Profile" : "Update Profile"}
+            </Button>
+          )}
+          <Button onClick={onClose} variant={"outlined"}>
+            {mode === "view" ? "Close" : "Cancel"}
+          </Button>
+        </Stack>
       </Stack>
-      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
-        Submit
-      </Button>
-      <Button onClick={() => reset(defaultProfile)} variant={"outlined"}>
-        Reset
-      </Button>
     </Drawer>
   );
 }
@@ -180,7 +218,6 @@ function TextInput(props: TextInputProps) {
       name={props.id}
       render={({ field: { onChange, value }, fieldState: { error } }) => (
         <TextField
-          // {...field}
           {...props}
           value={value}
           onChange={onChange}

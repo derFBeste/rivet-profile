@@ -1,10 +1,9 @@
-import { Profile } from "./features/profile/profileUtils";
+import { NewProfile, Profile } from "./features/profile/profileUtils";
 
 // TODO: type responses
 // TODO: handle errors, clean up
 
-export async function fetchProfile(id: string): Promise<Profile> {
-  // TODO: cleanup, change to profile
+export async function fetchProfileApi(id: string): Promise<Profile> {
   return await fetch(`https://codechallenge.rivet.work/api/v1/profile/${id}`, {
     headers: {
       token: process.env.REACT_APP_API_TOKEN || "",
@@ -12,20 +11,14 @@ export async function fetchProfile(id: string): Promise<Profile> {
   })
     .then((response) => response.json())
     .then((data) => {
-      // do something with the data
       return data;
     })
     .catch((error) => {
       console.error("Error fetching profile", error);
     });
-
-  // if (isArray(profiles)) {
-  //   return profiles;
-  // }
-  // return [profiles];
 }
 
-export async function fetchProfiles(): Promise<Profile[]> {
+export async function fetchProfilesApi(): Promise<Profile[]> {
   return await fetch("https://codechallenge.rivet.work/api/v1/profiles", {
     headers: {
       token: process.env.REACT_APP_API_TOKEN || "",
@@ -40,6 +33,41 @@ export async function fetchProfiles(): Promise<Profile[]> {
     });
 }
 
-export async function updateProfile() {}
+export async function addProfileApi(profile: NewProfile) {
+  return await fetch("https://codechallenge.rivet.work/api/v1/profile", {
+    headers: {
+      token: process.env.REACT_APP_API_TOKEN || "",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(profile),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error adding profile", error);
+    });
+}
 
-export async function createProfile() {}
+export async function updateProfileApi(profile: Profile) {
+  return await fetch(
+    `https://codechallenge.rivet.work/api/v1/profile/${profile.id}`,
+    {
+      headers: {
+        token: process.env.REACT_APP_API_TOKEN || "",
+        "Content-Type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify(profile),
+    }
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      console.error("Error updating profile", error);
+    });
+}

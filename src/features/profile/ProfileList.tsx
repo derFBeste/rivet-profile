@@ -8,7 +8,15 @@ const ProfileList = () => {
   const dispatch = useDispatch();
 
   return (
-    <Stack spacing={1} textAlign="left">
+    <Stack
+      gap={1}
+      textAlign="left"
+      width="32em"
+      boxSizing="border-box"
+      padding=".5em"
+      margin="0 auto"
+      maxWidth="100%"
+    >
       {profiles.length > 0 &&
         profiles.map((profile) => (
           <Box

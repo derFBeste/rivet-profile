@@ -1,7 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ProfileState, makeFakeUserList } from "./profileUtils";
+import {
+  NewProfile,
+  Profile,
+  ProfileState,
+  makeFakeUserList,
+} from "./profileUtils";
 import { RootState } from "../../store";
-import { fetchProfile, fetchProfiles } from "../../api";
+import {
+  addProfileApi,
+  fetchProfileApi,
+  fetchProfilesApi,
+  updateProfileApi,
+} from "../../api";
+import { add } from "lodash";
 
 const initialState = {
   profiles: [],
@@ -15,13 +26,33 @@ function returnFakeProfiles() {
   return profiles;
 }
 
-export const fetchUser = createAsyncThunk("users/fetchUser", (id: string) => {
-  return fetchProfile(id);
-});
+export const fetchProfiles = createAsyncThunk(
+  "profiles/fetchProfiles",
+  async () => {
+    return fetchProfilesApi();
+  }
+);
 
-export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  return fetchProfiles();
-});
+export const fetchProfile = createAsyncThunk(
+  "profiles/fetchProfile",
+  async (id: string) => {
+    return fetchProfileApi(id);
+  }
+);
+
+export const addProfile = createAsyncThunk(
+  "profiles/addProfile",
+  async (profile: NewProfile) => {
+    return addProfileApi(profile);
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "profiles/updateProfile",
+  async (profile: Profile) => {
+    return updateProfileApi(profile);
+  }
+);
 
 export const profileSlice = createSlice({
   name: "profiles",
@@ -41,13 +72,7 @@ export const profileSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    // builder.addCase(fetchUser.fulfilled, (state, action) => {
-    //   return {
-    //     ...state,
-    //     profiles: action.payload,
-    //   };
-    // });
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+    builder.addCase(fetchProfiles.fulfilled, (state, action) => {
       return {
         ...state,
         profiles: action.payload,
