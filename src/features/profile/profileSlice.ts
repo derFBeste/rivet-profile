@@ -12,12 +12,13 @@ import {
   fetchProfilesApi,
   updateProfileApi,
 } from "../../api";
-import { add } from "lodash";
+import { set } from "lodash";
 
 const initialState = {
   profiles: [],
   inFocus: null,
   mode: "view",
+  searchText: "",
 } as ProfileState;
 
 function returnFakeProfiles() {
@@ -70,6 +71,9 @@ export const profileSlice = createSlice({
     setMode: (state, action) => {
       state.mode = action.payload;
     },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload;
+    },
   },
   extraReducers(builder) {
     builder.addCase(fetchProfiles.fulfilled, (state, action) => {
@@ -82,8 +86,17 @@ export const profileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setActiveProfile, setMode } = profileSlice.actions;
-export const profileList = (state: RootState) => state.profile.profiles;
+export const { setActiveProfile, setMode, setSearchText } =
+  profileSlice.actions;
+export const profileList = (state: RootState) => {
+  if (state.profile.searchText) {
+    return state.profile.profiles.filter((profile) =>
+      profile.last_name.includes(state.profile.searchText)
+    );
+  }
+
+  return state.profile.profiles;
+};
 export const countProfiles = (state: RootState) =>
   state.profile.profiles.length as number;
 export const profileSelector = (state: RootState) => state.profile.inFocus;

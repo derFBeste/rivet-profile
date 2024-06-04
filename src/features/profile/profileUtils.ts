@@ -20,6 +20,7 @@ type ProfileState = {
   profiles: Profile[];
   inFocus: Profile | null;
   mode: "view" | "edit" | "add";
+  searchText: string;
 };
 
 const defaultProfile = {

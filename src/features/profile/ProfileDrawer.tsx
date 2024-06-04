@@ -7,8 +7,6 @@ import {
   Stack,
   Switch,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
 } from "@mui/material";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,11 +20,12 @@ import {
 } from "./profileSlice";
 import { ProfileLineItem } from "./ProfileLineItem";
 import { Controller, useForm } from "react-hook-form";
-import { NewProfile, Profile, defaultProfile } from "./profileUtils";
+import { defaultProfile } from "./profileUtils";
 import store from "../../store";
 import { ChangeEvent } from "react";
 
-// TODO: add edit toggle
+// TODO: grey about button until dirty
+// TODO: switch input types in edit mode
 // TODO: validate onupdate/focus off
 // TODO: try card
 
