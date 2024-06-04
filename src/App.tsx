@@ -16,17 +16,27 @@ function App() {
           <h1 style={{ margin: 0 }}>Welcome to Rivet</h1>
         </Box>
       </header>
-      <Stack direction="row" gap={1} justifyContent="center">
-        <SearchBar onSearch={(text) => dispatch(setSearchText(text))} />
-        <Button
-          variant="contained"
-          startIcon={<PersonAddAltOutlinedIcon />}
-          onClick={() => dispatch(setMode("add"))}
-        >
-          Add Profile
-        </Button>
+      <Stack
+        gap={1}
+        textAlign="left"
+        width="32em"
+        boxSizing="border-box"
+        padding=".5em"
+        margin="0 auto"
+        maxWidth="100%"
+      >
+        <Stack direction="row" gap={1} justifyContent="center">
+          <SearchBar onSearch={(text) => dispatch(setSearchText(text))} />
+          <Button
+            variant="contained"
+            startIcon={<PersonAddAltOutlinedIcon />}
+            onClick={() => dispatch(setMode("add"))}
+          >
+            Add Profile
+          </Button>
+        </Stack>
+        <ProfileList></ProfileList>
       </Stack>
-      <ProfileList></ProfileList>
       <ProfileDrawer />
     </>
   );

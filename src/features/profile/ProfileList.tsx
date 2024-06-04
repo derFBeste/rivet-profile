@@ -1,39 +1,41 @@
-import { Box, Stack } from "@mui/material";
+import { Card } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { ProfileLineItem } from "./ProfileLineItem";
-import { profileList, setActiveProfile } from "./profileSlice";
+import { searchTextSelector, setFocusedProfile } from "./profileSlice";
+import { useFetchProfilesQuery } from "../api/apiSlice";
+import { useMemo } from "react";
 
 const ProfileList = () => {
-  const profiles = useSelector(profileList);
+  const searchText = useSelector(searchTextSelector);
   const dispatch = useDispatch();
+  const { data, isFetching, isSuccess } = useFetchProfilesQuery();
+
+  // TODO: make this more robust
+  const profiles = useMemo(() => {
+    return data?.filter((profile) => profile.last_name.includes(searchText));
+  }, [data, searchText]);
+
+  function selectProfile(id: number) {
+    const profile = profiles?.find((p) => p.id === id);
+    dispatch(setFocusedProfile(profile));
+  }
+
+  console.log("profiles", profiles, isFetching, isSuccess);
 
   return (
-    <Stack
-      gap={1}
-      textAlign="left"
-      width="32em"
-      boxSizing="border-box"
-      padding=".5em"
-      margin="0 auto"
-      maxWidth="100%"
-    >
-      {profiles.length > 0 &&
+    <>
+      {isFetching && <div>Loading...</div>}
+      {profiles &&
         profiles.map((profile) => (
-          <Box
-            sx={{
-              backgroundColor: "white",
-              borderRadius: "4px",
-              overflow: "hidden",
-              boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, .1)",
-              cursor: "pointer",
-            }}
+          <Card
             key={profile.id}
-            onClick={() => dispatch(setActiveProfile(profile.id))}
+            onClick={() => selectProfile(profile.id)}
+            sx={{ cursor: "pointer" }}
           >
             <ProfileLineItem profile={profile} canEdit />
-          </Box>
+          </Card>
         ))}
-    </Stack>
+    </>
   );
 };
 

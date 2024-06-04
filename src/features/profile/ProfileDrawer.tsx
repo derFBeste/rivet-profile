@@ -13,16 +13,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   profileSelector,
   modeSelector,
-  setActiveProfile,
+  setFocusedProfile,
   setMode,
-  updateProfile,
-  addProfile,
 } from "./profileSlice";
 import { ProfileLineItem } from "./ProfileLineItem";
 import { Controller, useForm } from "react-hook-form";
 import { defaultProfile } from "./profileUtils";
-import store from "../../store";
 import { ChangeEvent } from "react";
+import {
+  useAddProfileMutation,
+  useUpdateProfileMutation,
+} from "../api/apiSlice";
 
 // TODO: grey about button until dirty
 // TODO: switch input types in edit mode
@@ -37,7 +38,7 @@ const profileSchema = z.object({
   address: z.string().min(1, { message: "Required" }).max(255),
   city: z.string().min(1, { message: "Required" }).max(255),
   state: z.string().min(1, { message: "Required" }).max(255),
-  zip: z.string().min(1, { message: "Required" }).max(255),
+  zip: z.string().length(5),
   photo: z.string().max(255).optional(),
   notes: z.string().optional(),
 });
@@ -47,6 +48,9 @@ type ProfileSchema = z.infer<typeof profileSchema>;
 
 function ProfileDrawer() {
   const dispatch = useDispatch();
+  const [updateProfile, updateResult] = useUpdateProfileMutation();
+  const [addProfile, addResult] = useAddProfileMutation();
+
   const mode = useSelector(modeSelector);
   const readOnly = mode === "view";
   const profile = useSelector(profileSelector);
@@ -57,7 +61,7 @@ function ProfileDrawer() {
   });
 
   function onClose() {
-    dispatch(setActiveProfile(null));
+    dispatch(setFocusedProfile(null));
     dispatch(setMode("view"));
     reset(defaultProfile);
   }
@@ -65,9 +69,9 @@ function ProfileDrawer() {
   function onSubmit(data: ProfileSchema) {
     console.log("submitting", data);
     if (mode === "add") {
-      store.dispatch(addProfile(data));
+      addProfile(data);
     } else {
-      profile && store.dispatch(updateProfile({ ...data, id: profile.id }));
+      profile && updateProfile({ ...data, id: profile.id });
     }
 
     // TODO: on success: update the profile list, show toast
