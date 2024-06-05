@@ -4,15 +4,21 @@ import { ProfileLineItem } from "./ProfileLineItem";
 import { searchTextSelector, setFocusedProfile } from "./profileSlice";
 import { useFetchProfilesQuery } from "../api/apiSlice";
 import { useMemo } from "react";
+import { matchSorter } from "match-sorter";
 
 const ProfileList = () => {
   const searchText = useSelector(searchTextSelector);
   const dispatch = useDispatch();
   const { data, isError } = useFetchProfilesQuery();
 
-  // TODO: make this more robust
   const profiles = useMemo(() => {
-    return data?.filter((profile) => profile.last_name.includes(searchText));
+    return data
+      ? matchSorter(data, searchText, {
+          keys: ["last_name", "first_name", "email", "phone"],
+        })
+      : [];
+
+    // return data?.filter((profile) => profile.last_name.includes(searchText));
   }, [data, searchText]);
 
   function selectProfile(id: number) {

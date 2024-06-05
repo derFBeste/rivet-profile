@@ -27,8 +27,7 @@ import {
   useAddProfileMutation,
   useUpdateProfileMutation,
 } from "../api/apiSlice";
-
-// TODO: switch input types in edit mode
+import { isByteLength, isNumeric } from "validator";
 
 const profileSchema = z.object({
   first_name: z.string().min(1, { message: "Required" }).max(255),
@@ -38,9 +37,16 @@ const profileSchema = z.object({
   address: z.string().min(1, { message: "Required" }).max(255),
   city: z.string().min(1, { message: "Required" }).max(255),
   state: z.string().min(1, { message: "Required" }).max(255),
-  zip: z.string().length(5),
+  zip: z
+    .string()
+    .length(5)
+    .refine((val) => isNumeric(val), { message: "Must be a number." }),
   photo: z.string().max(255).optional().nullish(),
-  notes: z.string().optional().nullish(), // TODO: 4GB max
+  notes: z
+    .string()
+    .optional()
+    .nullish()
+    .refine((val) => val && isByteLength(val, { min: 0, max: 4e9 })), // Does this work?
 });
 
 // This type ends up being the same as Profile.
