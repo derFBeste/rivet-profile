@@ -40,7 +40,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-// copied from: https://mui.com/material-ui/react-app-bar/#app-bar-with-search-field
+/**
+ * SearchBar
+ *
+ * @param onSearch
+ * @returns JSX.Element
+ *
+ * @remarks Mostly copied from a MUI example. https://mui.com/material-ui/react-app-bar/#app-bar-with-search-field
+ */
 function SearchBar({ onSearch }: { onSearch: (searchTerm: string) => void }) {
   return (
     <Search>

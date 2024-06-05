@@ -27,8 +27,9 @@ import {
   useAddProfileMutation,
   useUpdateProfileMutation,
 } from "../api/apiSlice";
-import { isByteLength, isNumeric } from "validator";
+import { isNumeric } from "validator";
 
+// Zod is used to validate form data. This defines the schema.
 const profileSchema = z.object({
   first_name: z.string().min(1, { message: "Required" }).max(255),
   last_name: z.string().min(1, { message: "Required" }).max(255),
@@ -42,14 +43,9 @@ const profileSchema = z.object({
     .length(5)
     .refine((val) => isNumeric(val), { message: "Must be a number." }),
   photo: z.string().max(255).optional().nullish(),
-  notes: z
-    .string()
-    .optional()
-    .nullish()
-    .refine((val) => val && isByteLength(val, { min: 0, max: 4e9 })), // Does this work?
+  notes: z.string().max(4e9).optional().nullish(), // TODO: Does this work? It should be a string with a max length of 4GB.
 });
 
-// This type ends up being the same as Profile.
 type ProfileSchema = z.infer<typeof profileSchema>;
 
 function ProfileDrawer() {
@@ -71,6 +67,7 @@ function ProfileDrawer() {
     }
   }, [addResult.isSuccess, refetch, updateResult.isSuccess]);
 
+  // This is a hook from react-hook-form. It loads the form and with Zod provides validation.
   const { handleSubmit, reset, control } = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
     values: mode === "add" || profile === null ? defaultProfile : profile,
@@ -218,13 +215,13 @@ function ProfileDrawer() {
       </Drawer>
       <Snackbar
         open={showAlert}
-        autoHideDuration={5000}
+        autoHideDuration={3000}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         onClose={onClose}
         message="Profile updated."
       >
         <Alert severity="success">
-          Profile {updateResult.isSuccess ? "updated" : "created"}.
+          Profile {mode === "edit" ? "updated" : "created"}.
         </Alert>
       </Snackbar>
     </>
@@ -239,7 +236,12 @@ interface TextInputProps extends OutlinedTextFieldProps {
   control: any;
 }
 
-// wraps TextField in a Controller for use with react-hook-form
+/**
+ * Text Input
+ * @param TextInputProps
+ *
+ * @remarks This component wraps MUI's TextField in a Controller for use with react-hook-form.
+ */
 function TextInput(props: TextInputProps) {
   return (
     <Controller

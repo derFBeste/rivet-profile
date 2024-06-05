@@ -17,8 +17,6 @@ const ProfileList = () => {
           keys: ["last_name", "first_name", "email", "phone"],
         })
       : [];
-
-    // return data?.filter((profile) => profile.last_name.includes(searchText));
   }, [data, searchText]);
 
   function selectProfile(id: number) {

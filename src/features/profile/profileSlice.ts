@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProfileState, makeFakeUserList } from "./profileUtils";
 import { RootState } from "../../store";
-import { api } from "../api/apiSlice";
 
 const initialState = {
   profiles: [],
@@ -15,8 +14,6 @@ function returnFakeProfiles() {
   console.log("got some [fake] data", profiles);
   return profiles;
 }
-
-export const selectProfiles = api.endpoints.fetchProfiles.select();
 
 export const profileSlice = createSlice({
   name: "profiles",
