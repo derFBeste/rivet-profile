@@ -63,7 +63,7 @@ function ProfileDrawer() {
       setShowAlert(true);
       refetch();
     }
-  }, [updateResult.isSuccess || addResult.isSuccess, refetch]);
+  }, [addResult.isSuccess, refetch, updateResult.isSuccess]);
 
   const { handleSubmit, reset, control } = useForm<ProfileSchema>({
     resolver: zodResolver(profileSchema),
@@ -96,7 +96,7 @@ function ProfileDrawer() {
         open={!!profile || mode === "add"}
         onClose={onClose}
       >
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between" mx=".5rem">
           <ProfileLineItem profile={profile || defaultProfile} />
           {mode !== "add" && (
             <FormControlLabel

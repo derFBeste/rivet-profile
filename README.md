@@ -54,26 +54,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 - [x] Allow all employee profiles to be viewed on a single screen
 - [x] Allow a single employee profile to be viewed
-- [ ] Allow a new employee profile to be created
-- [ ] Allow an existing employee profile to be updated
+- [x] Allow a new employee profile to be created
+- [x] Allow an existing employee profile to be updated
 
-- [ ] best way to access state in redux
 - [ ] type the actions
 - [ ] use system props for padding, margin, etc.
 - [ ] make profile pictures round, add initials if no picture
-- [ ] button for adding new employee
-- [ ] use stack
-- [ ] add alerts
-- [ ] try with slow response
-- [ ] dark mode
-- [ ] validation for response, react form?
-- [ ] extract class objects
-- [ ] look at zod for validation
-- [ ] remove lodash
-- [ ] does dispatch have any implications for rerendering?
-
-
-## notes
-
-- consolidated on profile instead of user
-- used built in props for padding, margin, gap, etc.

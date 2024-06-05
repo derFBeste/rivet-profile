@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack } from "@mui/material";
+import { Avatar, Box, IconButton, Stack } from "@mui/material";
 import { NewProfile, Profile } from "./profileUtils";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
@@ -20,26 +20,29 @@ const ProfileLineItem = ({ canEdit, profile }: ProfileLineItemArgs) => {
     <Stack direction="row" spacing={1} margin={1}>
       <div>
         {hasPhoto && (
-          <Box
-            sx={{
-              width: "5em",
-              height: "5em",
-              backgroundImage: `url("${profile.photo}")`,
-              backgroundSize: "cover",
-            }}
+          <Avatar
+            alt={profile.first_name + " " + profile.last_name}
+            src={profile.photo!}
+            sx={{ width: "5rem", height: "5rem" }}
           />
         )}
         {!hasPhoto && (
-          <Box
-            sx={{
-              width: "5em",
-              height: "5em",
-              background: spectrum,
-            }}
-          ></Box>
+          <Avatar
+            alt={profile.first_name + " " + profile.last_name}
+            src={profile.photo!}
+            sx={{ width: "5rem", height: "5rem", background: spectrum }}
+          >
+            {profile.first_name.charAt(0).toLocaleUpperCase() +
+              profile.last_name.charAt(0).toLocaleUpperCase()}
+          </Avatar>
         )}
       </div>
-      <Stack direction="column" width="100%" justifyContent="space-between">
+      <Stack
+        direction="column"
+        width="100%"
+        justifyContent="space-evenly"
+        ml=".5rem"
+      >
         <Stack
           direction="row"
           justifyContent="space-between"

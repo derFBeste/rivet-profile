@@ -1,4 +1,4 @@
-import { Alert, Box, Card } from "@mui/material";
+import { Alert, Card } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { ProfileLineItem } from "./ProfileLineItem";
 import { searchTextSelector, setFocusedProfile } from "./profileSlice";
@@ -32,7 +32,7 @@ const ProfileList = () => {
           <Card
             key={profile.id}
             onClick={() => selectProfile(profile.id)}
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: "pointer", borderRadius: ".75rem" }}
           >
             <ProfileLineItem profile={profile} canEdit />
           </Card>

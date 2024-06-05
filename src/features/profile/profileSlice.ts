@@ -32,29 +32,11 @@ export const profileSlice = createSlice({
       state.searchText = action.payload;
     },
   },
-  // extraReducers(builder) {
-  //   builder.addCase(fetchProfiles.fulfilled, (state, action) => {
-  //     return {
-  //       ...state,
-  //       profiles: action.payload,
-  //     };
-  //   });
-  // },
 });
 
 // Action creators are generated for each case reducer function
 export const { setFocusedProfile, setMode, setSearchText } =
   profileSlice.actions;
-
-// export const profileList = (state: RootState) => {
-//   if (state.profile.searchText) {
-//     return state.profile.profiles.filter((profile) =>
-//       profile.last_name.includes(state.profile.searchText)
-//     );
-//   }
-
-//   return state.profile.profiles;
-// };
 
 export const countProfiles = (state: RootState) =>
   state.profile.profiles.length as number;
