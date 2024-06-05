@@ -10,8 +10,8 @@ type Profile = {
   city: string; // 255 char max / required",
   state: string; // 255 char max / required",
   zip: string; // 255 char max / required",
-  photo?: string; // 255 char max / URL to image file",
-  notes?: string; // 4GB max"
+  photo?: string | null; // 255 char max / URL to image file",
+  notes?: string | null; // 4GB max"
 };
 
 type NewProfile = Omit<Profile, "id">;

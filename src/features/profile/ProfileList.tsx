@@ -1,4 +1,4 @@
-import { Card } from "@mui/material";
+import { Alert, Box, Card } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { ProfileLineItem } from "./ProfileLineItem";
 import { searchTextSelector, setFocusedProfile } from "./profileSlice";
@@ -8,7 +8,7 @@ import { useMemo } from "react";
 const ProfileList = () => {
   const searchText = useSelector(searchTextSelector);
   const dispatch = useDispatch();
-  const { data, isFetching, isSuccess } = useFetchProfilesQuery();
+  const { data, isError } = useFetchProfilesQuery();
 
   // TODO: make this more robust
   const profiles = useMemo(() => {
@@ -20,11 +20,13 @@ const ProfileList = () => {
     dispatch(setFocusedProfile(profile));
   }
 
-  console.log("profiles", profiles, isFetching, isSuccess);
-
   return (
     <>
-      {isFetching && <div>Loading...</div>}
+      {isError && (
+        <Alert severity="error" variant="filled">
+          There was an error with your request!{" "}
+        </Alert>
+      )}
       {profiles &&
         profiles.map((profile) => (
           <Card
